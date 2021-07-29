@@ -3,7 +3,7 @@
 # International Conference on Learning Representations (ICLR), 2020.
 
 import argparse
-from ofa.imagenet_classification import Cifar10RunConfig
+from ofa.imagenet_classification.run_manager import Cifar10RunConfig
 from ofa.imagenet_classification.run_manager.run_manager import RunManager
 import numpy as np
 import os

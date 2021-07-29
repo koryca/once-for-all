@@ -576,7 +576,8 @@ class DynamicResNetBottleneckBlock(MyModule):
 
     def re_organize_middle_weights(self, expand_ratio_stage=0):
         # conv3 -> conv2
-        importance = torch.sum(torch.abs(self.conv3.conv.conv.weight.data), dim=(0, 2, 3))
+        # importance = torch.sum(torch.abs(self.conv3.conv.conv.weight.data), dim=(0, 2, 3))
+        importance = torch.KMeans(n_clusters=1000, init='k-means++', random_state=0).fit(self.point_linear.conv.conv.weight.data)
         if isinstance(self.conv2.bn, DynamicGroupNorm):
             channel_per_group = self.conv2.bn.channel_per_group
             importance_chunks = torch.split(importance, channel_per_group)
@@ -604,7 +605,8 @@ class DynamicResNetBottleneckBlock(MyModule):
         self.conv2.conv.conv.weight.data = torch.index_select(self.conv2.conv.conv.weight.data, 0, sorted_idx)
 
         # conv2 -> conv1
-        importance = torch.sum(torch.abs(self.conv2.conv.conv.weight.data), dim=(0, 2, 3))
+        # importance = torch.sum(torch.abs(self.conv2.conv.conv.weight.data), dim=(0, 2, 3))
+        importance = torch.KMeans(n_clusters=1000, init='k-means++', random_state=0).fit(self.point_linear.conv.conv.weight.data)
         if isinstance(self.conv1.bn, DynamicGroupNorm):
             channel_per_group = self.conv1.bn.channel_per_group
             importance_chunks = torch.split(importance, channel_per_group)

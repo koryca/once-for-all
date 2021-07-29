@@ -11,6 +11,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 from tqdm import tqdm
+import horovod.torch as hvd
 
 from ofa.utils import cross_entropy_with_label_smoothing, cross_entropy_loss_with_soft_target, write_log, init_models
 from ofa.utils import DistributedMetric, list_mean, get_net_info, accuracy, AverageMeter, mix_labels, mix_images
@@ -22,7 +23,7 @@ __all__ = ['DistributedRunManager']
 class DistributedRunManager:
 
 	def __init__(self, path, net, run_config, hvd_compression, backward_steps=1, is_root=False, init=True):
-		import horovod.torch as hvd
+		
 
 		self.path = path
 		self.net = net
@@ -185,7 +186,7 @@ class DistributedRunManager:
 
 	# noinspection PyArgumentList
 	def broadcast(self):
-		import horovod.torch as hvd
+		# import horovod.torch as hvd
 		self.start_epoch = hvd.broadcast(torch.LongTensor(1).fill_(self.start_epoch)[0], 0, name='start_epoch').item()
 		self.best_acc = hvd.broadcast(torch.Tensor(1).fill_(self.best_acc)[0], 0, name='best_acc').item()
 		hvd.broadcast_parameters(self.net.state_dict(), 0)
