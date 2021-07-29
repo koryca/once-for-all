@@ -15,7 +15,6 @@ from ofa.utils.my_dataloader import MyRandomResizedCrop, MyDistributedSampler
 
 __all__ = ['ImagenetDataProvider']
 
-
 class ImagenetDataProvider(DataProvider):
 	DEFAULT_PATH = '/dataset/imagenet'
 
